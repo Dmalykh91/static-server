@@ -1,0 +1,9 @@
+---
+- hosts: nginx_server
+  roles:
+    - users
+    - zsh
+    - utilities
+    - nginx
+    - static
+    - ssh

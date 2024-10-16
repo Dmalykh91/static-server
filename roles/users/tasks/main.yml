@@ -1,0 +1,40 @@
+---
+- name: "Создание кастомных групп"
+  group:
+    name: "{{ item }}"
+    state: "present"
+  loop: "{{ custom_groups }}"
+  when: custom_groups is defined
+
+- name: "Управление пользователями"
+  user:
+    name: "{{ item.name }}"
+    shell: "{{ item.shell }}"
+    state: "{{ item.state }}"
+    password: "{{ item.password }}"
+    groups: "{{ item.groups | join(',') }}"
+    append: yes
+    remove: "{{ item.state == 'absent' }}"  # Удаление домашнего каталога при удалении пользователя
+  loop: "{{ users }}"
+  when: users is defined
+
+# - name: "Настройка SSH ключей"
+#   authorized_key:
+#     user: "{{ item.name }}"
+#     state: "{{ item.state }}"
+#     key: "{{ item.ssh_key }}"
+#   loop: "{{ users }}"
+#   when: users is defined and item.ssh_key != ""
+
+- name: Set up authorized_keys for the user
+  authorized_key: 
+    user: "{{ myvar.name }}" 
+    state: present 
+    key: "{{ lookup('file', '{{ myvar.name }}.pub') }}" 
+    manage_dir: yes
+  no_log: false
+  vars:
+    myvar: "{{ item }}"
+  with_items:
+    - "{{users}}"
+  when: users is defined and item.state == 'present'

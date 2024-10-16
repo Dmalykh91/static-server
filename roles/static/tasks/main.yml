@@ -1,0 +1,21 @@
+---
+- name: Create directory for images
+  ansible.builtin.file:
+    path: /var/www/html/images
+    state: directory
+    mode: '0755'
+- name: Получить HTML-контент страницы 
+  uri: 
+    url: "https://fonwall.ru"
+    return_content: yes 
+  register: page_content 
+ 
+- name: Извлечение ссылок на изображения 
+  set_fact: 
+      image_links: "{{ page_content.content | regex_findall('\"image\":\"(.*?)\"') }}" 
+- name: Скачивание изображений 
+  get_url: 
+      url: "{{ item }}" 
+      dest: "/var/www/html/images/{{ item | basename }}" 
+  loop: "{{ image_links }}" 
+  when: image_links | length > 0

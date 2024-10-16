@@ -1,0 +1,15 @@
+---
+- name: Update all packages
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Install additional utilities
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - htop
+    - ncdu
+    - git
+    - nano

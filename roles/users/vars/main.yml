@@ -1,0 +1,9 @@
+users: 
+  - { name: "alice", shell: "/bin/sh", state: "present", password: "{{ 'password' | password_hash('sha512') }}", ssh_key: "", groups: ["test", "sudo"] } 
+  - { name: "bob", shell: "/bin/bash", state: "absent", password: "{{ 'password' | password_hash('sha512') }}", ssh_key: "", groups: ["developers"] } 
+  - { name: "boris", shell: "/bin/bash", state: "absent", password: "{{ 'password' | password_hash('sha512') }}", ssh_key: "", groups: ["admins"] } 
+ 
+custom_groups: 
+  - "developers" 
+  - "admins" 
+  - "test"

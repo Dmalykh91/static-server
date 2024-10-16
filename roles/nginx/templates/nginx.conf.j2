@@ -1,0 +1,36 @@
+server { 
+    listen 80; 
+    server_name localhost; 
+ 
+    location / { 
+        root /var/www/html; 
+        index index.html index.htm index.nginx-debian.html; 
+        try_files $uri $uri/ =404; 
+    } 
+ 
+    # Обработка запросов к /images 
+    location /images/ { 
+        root /var/www/html; 
+        autoindex on; 
+        autoindex_exact_size off; 
+        autoindex_localtime on; 
+     
+    # Включение gzip для статики 
+        gzip on; 
+        gzip_types image/jpeg image/png image/gif; 
+ 
+        # Логирование запросов 
+        access_log /var/log/nginx/images_access.log; 
+ 
+        # Настройка кэширования 
+        expires 1h; 
+        add_header Cache-Control "public"; 
+    } 
+    # Настройка gzip 
+    gzip on; 
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript; 
+ 
+    # Логирование запросов 
+    access_log /var/log/nginx/access.log; 
+    error_log /var/log/nginx/error.log; 
+}

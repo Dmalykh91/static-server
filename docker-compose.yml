@@ -1,0 +1,8 @@
+version: '3'
+services:
+  webserver:
+    build: .
+    ports:
+      - "80:80"      # Пробрасываем HTTP порт для nginx
+      - "2222:22"    # Пробрасываем SSH порт
+    container_name: nginx_static_server
